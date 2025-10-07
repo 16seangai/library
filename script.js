@@ -1,35 +1,52 @@
-const myLibrary = [];
+class Book {
+    constructor(id, author, title, numberOfPages, hasBeenRead) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.numberOfPages = numberOfPages;
+        this.hasBeenRead = hasBeenRead
+    }
 
-function Book(id, author, title, numberOfPages, hasBeenRead) {
-    this.id = id;
-    this.author = author;
-    this.title = title;
-    this.numberOfPages = numberOfPages;
-    this.hasBeenRead = hasBeenRead;
-}
-
-Book.prototype.toggleRead = function() {
-    this.hasBeenRead = !this.hasBeenRead;
-}
-
-function addBookToLibrary(author, title, numberOfPages, hasBeenRead) {
-    id = crypto.randomUUID()
-    const book = new Book(id, author, title, numberOfPages, hasBeenRead);
-    myLibrary.push(book);
-}
-
-function removeBookById(id) {
-    const index = myLibrary.findIndex(book => book.id === id);
-    if (index !== -1) {
-        myLibrary.splice(index, 1);
+    toggleRead() {
+        this.hasBeenRead = !this.hasBeenRead;
     }
 }
 
-function displayBooks() {
+class Library {
+    #books = [];
+
+    addBookToLibrary(author, title, numberOfPages, hasBeenRead) {
+        let id = crypto.randomUUID();
+        const book = new Book(id, author, title, numberOfPages, hasBeenRead);
+        this.#books.push(book);
+    }
+
+    removeBookById(id) {
+        const index = this.#books.findIndex(book => book.id === id);
+        if (index !== -1) {
+            this.#books.splice(index, 1);
+        }
+    }
+
+    toggleRead(id) {
+        const book = this.#books.find(book => book.id === id);
+        if (book) {
+            book.toggleRead();
+        }
+    }
+
+    get books() {
+        return [...this.#books];
+    }
+}
+
+const library = new Library();
+
+function displayBooks(library) {
     const tbody = document.querySelector("#libraryTable tbody");
     tbody.innerHTML = "";
 
-    myLibrary.forEach(book => {
+    library.books.forEach(book => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
@@ -48,8 +65,8 @@ function displayBooks() {
     removeButtons.forEach(btn => {
         btn.addEventListener("click", (e) => {
             const id = e.target.getAttribute("data-id");
-            removeBookById(id);
-            displayBooks();
+            library.removeBookById(id);
+            displayBooks(library);
         });
     });
 
@@ -57,11 +74,8 @@ function displayBooks() {
     toggleButtons.forEach(btn => {
         btn.addEventListener("click", (e) => {
             const id = e.target.getAttribute("data-id");
-            const book = myLibrary.find(b => b.id === id);
-            if (book) {
-                book.toggleRead();
-                displayBooks();
-            }
+            library.toggleRead(id);
+            displayBooks(library);
         });
     });
 }
@@ -84,8 +98,8 @@ newBookForm.addEventListener("submit", (e) => {
   const pages = parseInt(document.getElementById("pagesInput").value, 10);
   const hasBeenRead = document.getElementById("readInput").checked;
 
-  addBookToLibrary(author, title, pages, hasBeenRead);
-  displayBooks();
+  library.addBookToLibrary(author, title, pages, hasBeenRead);
+  displayBooks(library);
 
   newBookForm.reset();
   newBookDialog.close();
