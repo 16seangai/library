@@ -30,26 +30,26 @@
 
     <!-- Modal form to input details of new book -->
     <dialog id="newBookDialog">
-    <form method="dialog" id="newBookForm">
-      <h2>Add a New Book</h2>
-      <label>
-        Author: <input type="text" id="authorInput" required>
-      </label>
-      <label>
-        Title: <input type="text" id="titleInput" required>
-      </label>
-      <label>
-        Pages: <input type="number" id="pagesInput" min="1" required>
-      </label>
-      <label>
-        Read? <input type="checkbox" id="readInput">
-      </label>
+      <form method="dialog" id="newBookForm" novalidate>
+        <h2>Add a New Book</h2>
+        <label>
+          Author: <input type="text" id="authorInput" required>
+        </label>
+        <label>
+          Title: <input type="text" id="titleInput" required>
+        </label>
+        <label>
+          Pages: <input type="number" id="pagesInput" min="1" required>
+        </label>
+        <label>
+          Read? <input type="checkbox" id="readInput">
+        </label>
 
-      <menu>
-        <button type="submit">Add Book</button>
-        <button type="reset" id="cancelBtn">Cancel</button>
-      </menu>
-    </form>
+        <menu>
+          <button type="submit">Add Book</button>
+          <button type="reset" id="cancelBtn">Cancel</button>
+        </menu>
+      </form>
   </dialog>
 </body>
 </html>

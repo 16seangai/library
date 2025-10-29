@@ -93,16 +93,42 @@ const cancelBtn = document.getElementById("cancelBtn");
 newBookForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-  const author = document.getElementById("authorInput").value;
-  const title = document.getElementById("titleInput").value;
-  const pages = parseInt(document.getElementById("pagesInput").value, 10);
-  const hasBeenRead = document.getElementById("readInput").checked;
+    const author = document.getElementById("authorInput");
+    const title = document.getElementById("titleInput");
+    const pages = document.getElementById("pagesInput");
+    const read = document.getElementById("readInput");
+    console.log('validating form');
 
-  library.addBookToLibrary(author, title, pages, hasBeenRead);
-  displayBooks(library);
+    if (author.validity.valueMissing) {
+        console.log("author is missing");
+        author.setCustomValidity("The author name must be filled!");
+    } else {
+        author.setCustomValidity("");
+    }
 
-  newBookForm.reset();
-  newBookDialog.close();
+    if (title.validity.valueMissing) {
+        title.setCustomValidity("The book title must be filled!");
+    } else {
+        title.setCustomValidity("");
+    }
+
+    if (pages.validity.valueMissing) {
+        pages.setCustomValidity("The number of pages must be filled!");
+    } else if (pages.validity.rangeUnderflow) {
+        pages.setCustomValidity("The number of pages must be at least 1!");
+    } else {
+        pages.setCustomValidity("");
+    }
+
+    if (!newBookForm.reportValidity()) {
+        return;
+    }
+
+    library.addBookToLibrary(author.value, title.value, parseInt(pages.value), read.checked);
+    displayBooks(library);
+
+    newBookForm.reset();
+    newBookDialog.close();
 });
 
 cancelBtn.addEventListener("click", () => {
